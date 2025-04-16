@@ -26,6 +26,7 @@
   "one_monokai.nvim": { "branch": "main", "commit": "1d6311633f9fbd948c363bd210b2176ae07a79f0" },
   "pear-tree": { "branch": "master", "commit": "2d2fb6d5893d26be2ef280852f80494ff166529a" },
   "plenary.nvim": { "branch": "master", "commit": "857c5ac632080dba10aae49dba902ce3abf91b35" },
+  "smart-splits.nvim": { "branch": "master", "commit": "ddb23c1a1cf1507bda487cda7f6e4690965ef9f5" },
   "trouble.nvim": { "branch": "main", "commit": "85bedb7eb7fa331a2ccbecb9202d8abba64d37b3" },
   "which-key.nvim": { "branch": "main", "commit": "370ec46f710e058c9c1646273e6b225acf47cbed" }
 }

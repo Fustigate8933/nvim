@@ -14,6 +14,10 @@ return {
 		})
 	end,
 	keys = {
-		{ "<leader>lg", "<cmd>FzfLua live_grep<CR>", desc = "Fzf live grep" }
+		{ "<leader>fg", "<cmd>FzfLua live_grep<CR>", desc = "Fzf live grep" },
+		{ "<leader>ff", "<cmd>FzfLua files<CR>", desc = "Fzf find file" },
+		-- Preview nagivation
+		-- <C-j> and <C-k> move up/down by one
+		-- <C-f> and <C-b> move up/down by half page
 	}
 }

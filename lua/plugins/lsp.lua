@@ -30,7 +30,7 @@ return {
 			{ "K", function() vim.lsp.buf.hover() end, desc = "Display hover information" },
 			{ "gd", function() vim.lsp.buf.definition() end, desc = "Go to definition" },
 			{ "gD", function() vim.lsp.buf.declaration() end, desc = "Go to declaration" },
-			{ "<leader>ca", function() vim.lsp.buf.code_action() end, desc = "Code action" }
+			{ "<leader>ca", function() vim.lsp.buf.code_action() end, desc = "Code action" },
 		}
 	},
 	{
@@ -50,9 +50,14 @@ return {
 					null_ls.builtins.formatting.prettier,
 				},
 			})
+
+			vim.diagnostic.config({
+				virtual_text = true, -- enable virtual text (disabled by default)
+			})
 		end,
 		keys = {
-			{ "<leader>gf", function() vim.lsp.buf.format() end, desc = "Format code" }
+			{ "<leader>gf", function() vim.lsp.buf.format() end, desc = "Format code" },
+			{ "<leader>e", "<cmd>lua vim.diagnostic.open_float()<CR>" }
 		}
 	}
 }
