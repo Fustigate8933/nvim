@@ -17,14 +17,41 @@ return {
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 			opts.capabilities = capabilities
 
+			local mason_registry = require('mason-registry')
+			local vue_language_server_path = mason_registry.get_package('vue-language-server')
 			local lspconfig = require("lspconfig")
 			lspconfig.lua_ls.setup(opts)
-			lspconfig.pyright.setup(opts)
-			lspconfig.volar.setup(opts)
-			lspconfig.ts_ls.setup(opts)
+			lspconfig.pyright.setup({
+				capabilities = capabilities,
+				settings = { -- for molten
+					python = {
+						analysis = {
+							diagnosticSeverityOverrides = {
+								reportUnusedExpression = "none",
+							},
+						},
+					},
+				},
+			})
 			lspconfig.tailwindcss.setup(opts)
 			lspconfig.eslint.setup(opts)
 			lspconfig.clangd.setup(opts)
+
+			-- hybrid mode is enabled by default, where volar handles html/css and ts_ls handels script part
+			lspconfig.ts_ls.setup({
+				capabilities = capabilities,
+				init_options = {
+					plugins = {
+						{
+							name = '@vue/typescript-plugin',
+							location = vue_language_server_path,
+							languages = { 'vue' },
+						},
+					},
+				},
+				filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
+			})
+			lspconfig.volar.setup(opts)
 		end,
 		keys = {
 			{ "K", function() vim.lsp.buf.hover() end, desc = "Display hover information" },
