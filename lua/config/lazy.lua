@@ -14,15 +14,20 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then -- if the folder at lazy path
 end
 vim.opt.rtp:prepend(lazypath) -- adds lazy.nvim plugin to neovim's runtime path
 
+require("config.options")
 require("lazy").setup({
 	spec = {
-		{ import = "plugins" }
+		{ import = "plugins" },
 	},
 	checker = {
-		enabled = true, -- auto check for updates
+		enabled = false, -- auto check for updates
 		notify = true, -- notify when new updates are found
 		frequency = 7200, -- check for updates every 2 hours
-	}
+	},
 })
 
+-- colors
 vim.cmd.colorscheme("one_monokai")
+vim.api.nvim_set_hl(0, "LineNrAbove", { fg = "#999999" })
+vim.api.nvim_set_hl(0, "LineNr", { fg = "#ffffff" })
+vim.api.nvim_set_hl(0, "LineNrBelow", { fg = "#999999" })

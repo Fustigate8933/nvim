@@ -20,4 +20,3 @@ vimopt.undodir = vim.fn.stdpath("data") .. "/undodir"
 vim.cmd [[inoremap <C-BS> <C-w>]]
 vim.keymap.set("v", "<C-c>", '"+y')
 vim.keymap.set("n", "<C-A>", "ggVG", { desc = "Select all" })
-
