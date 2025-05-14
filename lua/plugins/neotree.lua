@@ -34,9 +34,18 @@ return {
 				end,
 			},
 		},
+		event_handlers = {
+			{
+				event = "neo_tree_buffer_enter",
+				handler = function(arg)
+					vim.cmd [[
+						setlocal relativenumber
+					]]
+				end,
+			}
+		}
 	},
 	keys = {
-		{"<C-n>", "<cmd>Neotree toggle<CR>", desc = "Toggle Neotree"}
+		{ "<C-n>", "<cmd>Neotree toggle<CR>", desc = "Toggle Neotree" }
 	}
 }
-
