@@ -70,9 +70,13 @@ return {
 		lazy = false,
 		config = function()
 			local null_ls = require("null-ls")
+			local eslint_diagnostics = require("none-ls.diagnostics.eslint_d")
+			local eslint_formatting = require("none-ls.formatting.eslint_d")
 			null_ls.setup({
 				sources = {
-					null_ls.builtins.diagnostics.eslint_lsp, -- eslint
+					eslint_diagnostics,
+					eslint_formatting,
+					-- null_ls.builtins.diagnostics.eslint, -- eslint
 					null_ls.builtins.formatting.stylua, -- stylua is a formatter for lua files
 					null_ls.builtins.formatting.isort, -- formatter for python, sorts imports alphabetically
 					null_ls.builtins.formatting.black, -- general python formatter
