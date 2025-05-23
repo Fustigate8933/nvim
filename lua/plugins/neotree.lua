@@ -40,6 +40,7 @@ return {
 				handler = function(arg)
 					vim.cmd [[
 						setlocal relativenumber
+						setlocal nu
 					]]
 				end,
 			}
