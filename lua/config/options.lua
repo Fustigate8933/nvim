@@ -16,6 +16,7 @@ vimopt.termguicolors = true
 vimopt.scrolloff = 8
 vimopt.undofile = true -- retain undo history even after closing files
 vimopt.undodir = vim.fn.stdpath("data") .. "/undodir"
+vimopt.splitright = true
 
 vim.cmd [[inoremap <C-BS> <C-w>]]
 vim.keymap.set("v", "<C-c>", '"+y')

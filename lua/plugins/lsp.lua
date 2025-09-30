@@ -6,7 +6,7 @@ return {
 	{
 		"williamboman/mason-lspconfig.nvim",
 		opts = {
-			ensure_installed = { "lua_ls", "pyright", "ts_ls", "eslint_d", "tailwindcss", "clangd", "eslint-lsp", "isort", "prettier", "pylint", "stylua", "vue_ls" },
+			ensure_installed = { "lua_ls", "pyright", "ts_ls", "tailwindcss", "vue_ls" },
 			automatic_installation = true
 		}
 	},
@@ -40,7 +40,25 @@ return {
 				capabilities = capabilities,
 				filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
 			})
-			lspconfig.clangd.setup(opts)
+			lspconfig.clangd.setup({
+				capabilities = capabilities,
+				cmd = { "/usr/bin/clangd" },
+				init_options = {
+					fallbackFlags = {
+						"-std=c++20",
+						"-I/usr/include/c++/15",
+						"-I/usr/include/x86_64-pc-linux-gnu/c++/15",
+						"-I/usr/include",
+						"-I/usr/local/include",
+					},
+				},
+				root_dir = lspconfig.util.root_pattern(
+					"compile_commands.json",
+					"compile_flags.txt",
+					".git"
+				) or vim.loop.cwd(),
+			})
+			lspconfig.ruby_lsp.setup(opts)
 
 			-- hybrid mode is enabled by default, where volar handles html/css and ts_ls handels script part
 			-- local mason_registry = require('mason-registry')
@@ -84,8 +102,11 @@ return {
 					null_ls.builtins.formatting.stylua, -- stylua is a formatter for lua files
 					null_ls.builtins.formatting.isort, -- formatter for python, sorts imports alphabetically
 					null_ls.builtins.formatting.black, -- general python formatter
-					null_ls.builtins.diagnostics.pylint, -- python linter
+					null_ls.builtins.diagnostics.pylint.with({
+						extra_args = { "--disable=too-many-nested-blocks", "--disable=line-too-long" }
+					}), -- python linter
 					null_ls.builtins.formatting.prettier,
+					null_ls.builtins.formatting.rubocop,
 				},
 			})
 

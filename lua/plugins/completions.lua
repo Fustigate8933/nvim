@@ -4,8 +4,7 @@ return {
 		dependencies = {
 			"saadparwaiz1/cmp_luasnip",
 			"rafamadriz/friendly-snippets",
-		},
-	},
+		}, },
 	{
 		"hrsh7th/nvim-cmp",
 		dependencies = {
@@ -43,5 +42,38 @@ return {
 				}),
 			})
 		end,
+	},
+	{
+		"zbirenbaum/copilot.lua",
+		config = function()
+			require("copilot").setup({
+				suggestion = {
+					keymap = {
+						accept = "<C-j>"
+					}
+				}
+			})
+		end,
+	},
+	{
+		"CopilotC-Nvim/CopilotChat.nvim",
+		dependencies = {
+			{ "zbirenbaum/copilot.lua" }, -- or zbirenbaum/copilot.lua
+			{ "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
+		},
+		build = "make tiktoken",
+		opts = {},
+		lazy = false,
+		keys = {
+			{ "<leader>zc", "<cmd>CopilotChat<cr>", desc = "Copilot Chat", mode="n" },
+			{ "<leader>ze", "<cmd>CopilotChatExplain<cr>", desc = "Copilot Chat Explain", mode="v" },
+			{ "<leader>zo", "<cmd>CopilotChatOptimize<cr>", desc = "Copilot Chat Optimize", mode="v" },
+			{ "<leader>zt", "<cmd>CopilotChatTests<cr>", desc = "Copilot Chat Tests", mode="v" },
+			{ "<leader>zr", "<cmd>CopilotChatReview<cr>", desc = "Copilot Chat Review", mode="v" },
+			{ "<leader>zf", "<cmd>CopilotChatFix<cr>", desc = "Copilot Chat Fix", mode="v" },
+			{ "<leader>zd", "<cmd>CopilotChatDocs<cr>", desc = "Copilot Chat Docs", mode="v" },
+			{ "<leader>zm", "<cmd>CopilotChatCommit<cr>", desc = "Copilot Chat Commit", mode="v" },
+			{ "<leader>zm", "<cmd>CopilotChatCommit<cr>", desc = "Copilot Chat Commit", mode="n" },
+		},
 	},
 }

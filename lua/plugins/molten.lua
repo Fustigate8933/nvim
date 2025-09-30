@@ -1,3 +1,4 @@
+-- if molten isn't runnnig in .ipynb files try running :UpdateRemotePlugins
 return {
 	{
 		"benlubas/molten-nvim",

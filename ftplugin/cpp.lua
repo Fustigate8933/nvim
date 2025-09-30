@@ -6,7 +6,7 @@ local function run_and_display_c()
 	local source_file = vim.fn.expand("%:p") -- Absolute path of the source file
 	local output_file = vim.fn.expand("%:p:r") -- Absolute path for the output file
 
-	local cmd = string.format("g++ -o '%s' '%s' && '%s' 2>&1", output_file, source_file, output_file)
+	local cmd = string.format("g++ -std=c++11 -o '%s' '%s' && '%s' 2>&1", output_file, source_file, output_file)
 	local output = vim.fn.system(cmd)
 
 	-- Find the existing buffer or create a new one

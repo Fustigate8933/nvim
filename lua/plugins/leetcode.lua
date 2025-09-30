@@ -11,6 +11,6 @@ return {
 		injector = {
 			["python3"] = { before = true }
 		},
-		image_support = true,
+		image_support = false,
     },
 }
