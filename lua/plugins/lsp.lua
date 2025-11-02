@@ -6,9 +6,8 @@ return {
 	{
 		"williamboman/mason-lspconfig.nvim",
 		opts = {
-			ensure_installed = { "lua_ls", "pyright", "ts_ls", "tailwindcss", "vue_ls" },
-			automatic_installation = true
-		}
+			ensure_installed = { "lua_ls", "pyright", "ts_ls", "tailwindcss", "vue_ls", "eslint", "ruby_lsp" },
+		},
 	},
 	{
 		"neovim/nvim-lspconfig",
@@ -19,13 +18,30 @@ return {
 		},
 		config = function(_, opts)
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
-			opts.capabilities = capabilities
+			local mason_bin = vim.fn.stdpath("data") .. "/mason/bin/"
 
-			local lspconfig = require("lspconfig")
-			lspconfig.lua_ls.setup(opts)
-			lspconfig.pyright.setup({
+			vim.lsp.config.lua_ls = vim.tbl_extend("force", {
+				cmd = { mason_bin .. "lua-language-server" },
+				root_markers = {
+					".luarc.json",
+					".luarc.jsonc",
+					".luacheckrc",
+					".stylua.toml",
+					"stylua.toml",
+					"selene.toml",
+					"selene.yml",
+					".git",
+				},
+				filetypes = { "lua" },
 				capabilities = capabilities,
-				settings = { -- for molten
+			}, opts or {})
+
+			vim.lsp.config.pyright = {
+				cmd = { "pyright-langserver", "--stdio" },
+				root_markers = { "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", "Pipfile", ".git" },
+				filetypes = { "python" },
+				capabilities = capabilities,
+				settings = {
 					python = {
 						analysis = {
 							diagnosticSeverityOverrides = {
@@ -34,15 +50,54 @@ return {
 						},
 					},
 				},
-			})
-			lspconfig.tailwindcss.setup(opts)
-			lspconfig.eslint.setup({
+			}
+
+			vim.lsp.config.tailwindcss = {
+				cmd = { "tailwindcss-language-server", "--stdio" },
+				root_markers = {
+					"tailwind.config.js",
+					"tailwind.config.cjs",
+					"tailwind.config.mjs",
+					"tailwind.config.ts",
+					".git",
+				},
+				filetypes = {
+					"css",
+					"scss",
+					"sass",
+					"html",
+					"javascript",
+					"javascriptreact",
+					"typescript",
+					"typescriptreact",
+					"vue",
+					"svelte",
+				},
 				capabilities = capabilities,
-				filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
-			})
-			lspconfig.clangd.setup({
+			}
+
+			vim.lsp.config.eslint = {
+				cmd = { "vscode-eslint-language-server", "--stdio" },
+				root_markers = {
+					".eslintrc",
+					".eslintrc.js",
+					".eslintrc.cjs",
+					".eslintrc.yaml",
+					".eslintrc.yml",
+					".eslintrc.json",
+					"eslint.config.js",
+					"package.json",
+					".git",
+				},
+				filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
 				capabilities = capabilities,
+			}
+
+			vim.lsp.config.clangd = {
 				cmd = { "/usr/bin/clangd" },
+				root_markers = { "compile_commands.json", "compile_flags.txt", ".git" },
+				filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
+				capabilities = capabilities,
 				init_options = {
 					fallbackFlags = {
 						"-std=c++20",
@@ -52,42 +107,68 @@ return {
 						"-I/usr/local/include",
 					},
 				},
-				root_dir = lspconfig.util.root_pattern(
-					"compile_commands.json",
-					"compile_flags.txt",
-					".git"
-				) or vim.loop.cwd(),
-			})
-			lspconfig.ruby_lsp.setup(opts)
+			}
 
-			-- hybrid mode is enabled by default, where volar handles html/css and ts_ls handels script part
-			-- local mason_registry = require('mason-registry')
-			-- local vue_language_server_path = mason_registry.get_package('vue-language-server'):get_install_path() .. "/node_modules/@vue/language-server"
-			lspconfig.ts_ls.setup({
+			vim.lsp.config.ruby_lsp = {
+				cmd = { "ruby-lsp" },
+				root_markers = { "Gemfile", ".git" },
+				filetypes = { "ruby", "eruby" },
+				capabilities = capabilities,
+			}
+
+			vim.lsp.config.ts_ls = {
+				cmd = { "typescript-language-server", "--stdio" },
+				root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
+				filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
 				capabilities = capabilities,
 				init_options = {
 					plugins = {
 						{
-							name = '@vue/typescript-plugin',
+							name = "@vue/typescript-plugin",
 							location = "/home/fustigate/.local/share/nvim/mason/packages/vue-language-server/node_modules/@vue/language-server",
-							languages = { 'vue' },
+							languages = { "vue" },
 						},
 					},
 				},
-				filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
-			})
+			}
+
+			vim.lsp.enable({ "lua_ls", "pyright", "tailwindcss", "eslint", "clangd", "ruby_lsp", "ts_ls" })
 		end,
 		keys = {
-			{ "K", function() vim.lsp.buf.hover() end, desc = "Display hover information" },
-			{ "gd", function() vim.lsp.buf.definition() end, desc = "Go to definition" },
-			{ "gD", function() vim.lsp.buf.declaration() end, desc = "Go to declaration" },
-			{ "<leader>ca", function() vim.lsp.buf.code_action() end, desc = "Code action" },
-		}
+			{
+				"K",
+				function()
+					vim.lsp.buf.hover()
+				end,
+				desc = "Display hover information",
+			},
+			{
+				"gd",
+				function()
+					vim.lsp.buf.definition()
+				end,
+				desc = "Go to definition",
+			},
+			{
+				"gD",
+				function()
+					vim.lsp.buf.declaration()
+				end,
+				desc = "Go to declaration",
+			},
+			{
+				"<leader>ca",
+				function()
+					vim.lsp.buf.code_action()
+				end,
+				desc = "Code action",
+			},
+		},
 	},
 	{
 		"nvimtools/none-ls.nvim", -- this plugin allows you to use tools like linters and formatters as if they were LSPs
 		dependencies = {
-			"nvimtools/none-ls-extras.nvim"
+			"nvimtools/none-ls-extras.nvim",
 		},
 		lazy = false,
 		config = function()
@@ -103,7 +184,7 @@ return {
 					null_ls.builtins.formatting.isort, -- formatter for python, sorts imports alphabetically
 					null_ls.builtins.formatting.black, -- general python formatter
 					null_ls.builtins.diagnostics.pylint.with({
-						extra_args = { "--disable=too-many-nested-blocks", "--disable=line-too-long" }
+						extra_args = { "--disable=too-many-nested-blocks", "--disable=line-too-long" },
 					}), -- python linter
 					null_ls.builtins.formatting.prettier,
 					null_ls.builtins.formatting.rubocop,
@@ -115,8 +196,14 @@ return {
 			})
 		end,
 		keys = {
-			{ "<leader>gf", function() vim.lsp.buf.format() end, desc = "Format code" },
-			{ "<leader>e", "<cmd>lua vim.diagnostic.open_float()<CR>" }
-		}
-	}
+			{
+				"<leader>gf",
+				function()
+					vim.lsp.buf.format()
+				end,
+				desc = "Format code",
+			},
+			{ "<leader>e", "<cmd>lua vim.diagnostic.open_float()<CR>" },
+		},
+	},
 }

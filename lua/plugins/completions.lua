@@ -12,6 +12,7 @@ return {
 		},
 		config = function()
 			local cmp = require("cmp")
+			local luasnip = require("luasnip")
 			require("luasnip.loaders.from_vscode").lazy_load()
 
 			cmp.setup({
@@ -33,6 +34,24 @@ return {
 						cmp.ConfirmBehavior.Replace,
 						select = false,
 					}),
+					["<Tab>"] = cmp.mapping(function(fallback)
+						if cmp.visible() then
+							cmp.select_next_item()
+						elseif luasnip.expand_or_jumpable() then
+							luasnip.expand_or_jump()
+						else
+							fallback()
+						end
+					end, { "i", "s" }),
+					["<S-Tab>"] = cmp.mapping(function(fallback)
+						if cmp.visible() then
+							cmp.select_prev_item()
+						elseif luasnip.jumpable(-1) then
+							luasnip.jump(-1)
+						else
+							fallback()
+						end
+					end, { "i", "s" }),
 				}),
 				sources = cmp.config.sources({
 					{ name = "nvim_lsp" },
@@ -45,13 +64,31 @@ return {
 	},
 	{
 		"zbirenbaum/copilot.lua",
+		cmd = "Copilot",
+		event = "InsertEnter",
 		config = function()
 			require("copilot").setup({
+				panel = {
+					enabled = true,
+					auto_refresh = false,
+					keymap = {
+						jump_prev = "[[",
+						jump_next = "]]",
+						accept = "<CR>",
+						refresh = "gr",
+						open = "<M-CR>"
+					},
+					layout = {
+						position = "bottom", -- | top | left | right | bottom |
+						ratio = 0.4
+					},
+				},
 				suggestion = {
+					auto_trigger = true, -- start suggestion once you enter insert mode
 					keymap = {
 						accept = "<C-j>"
 					}
-				}
+				},
 			})
 		end,
 	},
