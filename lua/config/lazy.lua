@@ -27,7 +27,7 @@ require("lazy").setup({
 })
 
 -- colors
-vim.cmd.colorscheme("one_monokai")
+vim.cmd.colorscheme("sonokai")
 vim.api.nvim_set_hl(0, "LineNrAbove", { fg = "#999999" })
 vim.api.nvim_set_hl(0, "LineNr", { fg = "#ffffff" })
 vim.api.nvim_set_hl(0, "LineNrBelow", { fg = "#999999" })
